@@ -58,7 +58,7 @@ public class DBDaoImpl implements DBDao {
 			jsonObject = jsonUtilConverter.toJSONArray(res);
 			allPcParts = jsonObject.toString();
 
-			System.out.println("in DaoImpl json : " + allPcParts);
+			System.out.println("in getAllPcParts json : " + allPcParts);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,6 +68,35 @@ public class DBDaoImpl implements DBDao {
 		}
 
 		return allPcParts;
+	}
+
+	@Override
+	public String getBrandParts(String brandName) throws Exception {
+		
+		String brandParts = null;
+		jsonUtilConverter = new ToJSON();
+		jsonObject = new JSONArray();
+		
+		try{
+			
+			conn = RestDBUtil.getCon();
+			prepStat = conn.prepareStatement("SELECT PC_PARTS_PK, PC_PARTS_TITLE, PC_PARTS_CODE, PC_PARTS_MAKER, PC_PARTS_AVAIL, PC_PARTS_DESC " +	
+											 " FROM PC_PARTS WHERE UPPER(PC_PARTS_MAKER) = ? ");
+			prepStat.setString(1, brandName.toUpperCase());
+			res = prepStat.executeQuery();
+
+			jsonObject = jsonUtilConverter.toJSONArray(res);
+			brandParts = jsonObject.toString();
+
+			System.out.println("in getBrandParts json : " + brandParts);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			prepStat.close();
+			RestDBUtil.close(conn);
+		}
+		return brandParts;
 	}
 
 }
