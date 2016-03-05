@@ -9,12 +9,12 @@ import com.ashish.daoimpl.DBDaoImpl;
 
 @Path("/v1/inventory/")
 public class V1_inventory {
-	
+
 	DBDao dbDao = null;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String returnAllPcParts() throws Exception{
+	public String returnAllPcParts() throws Exception {
 		String returnAllPcParts;
 		dbDao = new DBDaoImpl();
 		returnAllPcParts = dbDao.getAllPcParts();

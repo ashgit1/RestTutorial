@@ -15,11 +15,12 @@ public class DBStatus {
 	@Produces(MediaType.TEXT_HTML)
 	public String returnDBStatus() throws Exception {
 		String Status = null;
-		String returnStatus=null;
+		String returnStatus = null;
 		dbDao = new DBDaoImpl();
 		Status = dbDao.getDBDate();
-		returnStatus = "<p><font size='10' color='green'> Database Connection Success !!! </font></p>" +
-						"<p><font size='10' color='blue'> Date/Time on server: " + Status + "</font></p>";
+		returnStatus = "<p><font size='10' color='green'> Database Connection Success !!! </font></p>"
+				+ "<p><font size='10' color='blue'> Date/Time on server: "
+				+ Status + "</font></p>";
 		return returnStatus;
 	}
 
