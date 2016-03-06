@@ -6,7 +6,7 @@ import javax.ws.rs.core.MediaType;
 import com.ashish.dao.DBDao;
 import com.ashish.daoimpl.DBDaoImpl;
 
-@Path("/db/")
+@Path("/status/db/")
 public class DBStatus {
 
 	DBDao dbDao = null;

@@ -132,39 +132,97 @@ public class DBDaoImpl implements DBDao {
 	}
 
 	@Override
-	public int insertIntoPC_PARTS(String PC_PARTS_TITLE, 
-									String PC_PARTS_CODE, 
-									String PC_PARTS_MAKER, 
-									String PC_PARTS_AVAIL, 
-									String PC_PARTS_DESC) throws Exception {
-		
-		int http_code=0;
-		
+	public int insertIntoPC_PARTS(String PC_PARTS_TITLE, String PC_PARTS_CODE,
+			String PC_PARTS_MAKER, String PC_PARTS_AVAIL, String PC_PARTS_DESC)
+			throws Exception {
+
+		int http_code = 0;
+
 		try {
 			conn = RestDBUtil.getCon();
-			prepStat = conn.prepareStatement("insert into PC_PARTS " +
-					"(PC_PARTS_TITLE, PC_PARTS_CODE, PC_PARTS_MAKER, PC_PARTS_AVAIL, PC_PARTS_DESC) " +
-					"VALUES ( ?, ?, ?, ?, ? ) ");
+			prepStat = conn
+					.prepareStatement("insert into PC_PARTS "
+							+ "(PC_PARTS_TITLE, PC_PARTS_CODE, PC_PARTS_MAKER, PC_PARTS_AVAIL, PC_PARTS_DESC) "
+							+ "VALUES ( ?, ?, ?, ?, ? ) ");
 			prepStat.setString(1, PC_PARTS_TITLE);
 			prepStat.setString(2, PC_PARTS_CODE);
 			prepStat.setString(3, PC_PARTS_MAKER);
-			//PC_PARTS_AVAIL is a number column, so we need to convert the String into a integer
+			// PC_PARTS_AVAIL is a number column, so we need to convert the
+			// String into a integer
 			int avilInt = Integer.parseInt(PC_PARTS_AVAIL);
 			prepStat.setInt(4, avilInt);
 			prepStat.setString(5, PC_PARTS_DESC);
-			int rowcount = prepStat.executeUpdate(); //note the new command for insert statement
-			if(rowcount==1){
-				http_code=200;
+			int rowcount = prepStat.executeUpdate(); // note the new command for
+														// insert statement
+			if (rowcount == 1) {
+				http_code = 200;
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			http_code=500;
+			http_code = 500;
 		} finally {
 			prepStat.close();
 			RestDBUtil.close(conn);
 		}
 
+		return http_code;
+	}
+
+	@Override
+	public int updatePC_PARTS(int pk, int avail) throws Exception {
+		int http_code = 0;
+
+		try {
+			// If this was a real application, you should do data validation
+			// here before updating data.
+			conn = RestDBUtil.getCon();
+			prepStat = conn.prepareStatement("update PC_PARTS "
+											+ "set PC_PARTS_AVAIL = ? " + "where PC_PARTS_PK = ? ");
+
+			prepStat.setInt(1, avail);
+			prepStat.setInt(2, pk);
+			int rowcount = prepStat.executeUpdate();
+			if (rowcount == 1) {
+				http_code = 200;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			http_code = 500;
+		} finally {
+			prepStat.close();
+			RestDBUtil.close(conn);
+		}
+
+		return http_code;
+	}
+
+	@Override
+	public int deletePC_PARTS(int pk) throws Exception {
+		
+		int http_code = 0;
+
+		try {
+			// If this was a real application, you should do data validation
+			// here before deleting data.
+			conn = RestDBUtil.getCon();
+			prepStat = conn.prepareStatement("delete from PC_PARTS " +
+											"where PC_PARTS_PK = ? ");
+
+			prepStat.setInt(1, pk);
+			int rowcount = prepStat.executeUpdate();
+			if (rowcount == 1) {
+				http_code = 200;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			http_code = 500;
+		} finally {
+			prepStat.close();
+			RestDBUtil.close(conn);
+		}
 		return http_code;
 	}
 
