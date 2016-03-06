@@ -11,6 +11,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 import com.ashish.dao.DBDao;
 import com.ashish.daoimpl.DBDaoImpl;
@@ -79,7 +81,8 @@ public class V2_inventory {
 	}
 	
 	/**
-	 * Adding an Item Entry
+	 * Adding an Item Entry via post.html and post.js
+	 * Also using Jackson parser to convert a json string into java object.
 	 */
 	@POST
 	@Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
@@ -90,6 +93,8 @@ public class V2_inventory {
 		String returnString=null;
 		int http_code=0;
 		dbDao = new DBDaoImpl();
+		JSONObject jsonObject = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
 		System.out.println("Incoming pc parts in inventory : " + incomingData);
 		// Converts a json string into java object...
 		ObjectMapper mapper = new ObjectMapper();
@@ -100,10 +105,12 @@ public class V2_inventory {
 									item.PC_PARTS_AVAIL, 
 									item.PC_PARTS_DESC);
 		if(http_code == 200){
-			returnString = "Item inserted successfully"; 
+			jsonObject.put("HTTP_CODE", "200");
+			jsonObject.put("MSG", "Item " + item.PC_PARTS_TITLE + " added successfully, Version 2");
+			returnString = jsonArray.put(jsonObject).toString();
 		}
 		else{
-			return Response.status(500).entity("Unable to process items!").build();
+			return Response.status(500).entity("Unable to enter item: " + item.PC_PARTS_TITLE).build();
 		}
 		return Response.ok(returnString).build();
 	}
